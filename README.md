@@ -4,8 +4,6 @@ Discord channel copy bot
 Add the bot to BOTH of your servers using this link. (NOTE: You must be the OWNER (Not just an admin) of BOTH servers)
 https://discordapp.com/api/oauth2/authorize?client_id=768322637574570015&scope=bot&permissions=8
 
-**DISCLAIMER: There is no guarantee that I will keep this bot running on the server at any given point, use at your own risk**
-
 Use: `pc.copychannel`
 The bot will list the channels in the server that you are typing in. You must enter the ID of the channel that you want to copy and then I will give you a command to copy and paste in the new server.
 
