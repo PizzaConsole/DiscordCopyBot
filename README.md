@@ -1,10 +1,15 @@
 # ALERT
-PoisnCopy is now on 100 servers which is the capacity based on [this post from Discord](https://support.discord.com/hc/en-us/articles/4410940809111). I do not have any plans to Verify my bot. this decision is not an easy one as I know this bot is very useful to many people as Discord does not offer this service themselves. I frankly do not have time to spend getting this bot into compliance. Should demand change for this, I might reconsider.
 
-Therefore, _**if you try to add the bot to your servers it won't work.**_ Feel free to contact me directly with question: posinfang@poisnfang.com
-### Show Some Support
-<a href="https://www.buymeacoffee.com/poisncopy" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+PoisnCopy is now on 100 servers which is the capacity based on [this post from Discord](https://support.discord.com/hc/en-us/articles/4410940809111). I hope to verify this bot at some point, but it might be take a while.
+
+Therefore, _**if you try to add the bot to your servers it won't work.**_ Contact me directly with questions: posinfang@poisnfang.com
+
+**_I can assist in setting this bot up for personal use. Please reach out if you need help!_**
+
+### Show Some Support - _Sponsor this project on Github_
+
 # PoisnCopy
+
 Discord channel copy bot
 
 Add the bot to BOTH of your servers using this link. (NOTE: You must be the OWNER (Not just an admin) of BOTH servers)
@@ -18,7 +23,7 @@ The bot will list the channels in the server that you are typing in. You must en
 **Make sure your bot can see which channel you are typing in (check left hand side)**
 ![image](https://user-images.githubusercontent.com/60050783/107395699-49d3a300-6aba-11eb-8b1c-d4e4b41cd6f3.png)
 
-*Note: The `pc.copychannel` command is just to list the IDs, once you have them, you can just use the `pc.loadchannel`command.
+\*Note: The `pc.copychannel` command is just to list the IDs, once you have them, you can just use the `pc.loadchannel`command.
 
 i.e.
 

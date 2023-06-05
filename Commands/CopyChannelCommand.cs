@@ -1,13 +1,11 @@
-﻿using DSharpPlus;
+﻿using CsvHelper;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Globalization;
+using System.IO;
 using static DSharpPlus.Entities.DiscordEmbedBuilder;
 
 namespace PoisnCopy.Commands;
@@ -77,6 +75,9 @@ public class CopyChannelCommand : BaseCommandModule, IModule
 
         await ctx.RespondAsync(
             $"Copy command: `pc.loadchannel {selectedChannel.Value.GuildId} {selectedChannel.Value.Id}`"
+        );
+        await ctx.RespondAsync(
+            $"Export command: `pc.exportchannel {selectedChannel.Value.GuildId} {selectedChannel.Value.Id}`"
         );
     }
 
@@ -181,5 +182,86 @@ public class CopyChannelCommand : BaseCommandModule, IModule
         }
 
         await ctx.RespondAsync($"{newChan.Name} copy complete!");
+    }
+
+    [Command("exportchannel")]
+    [Description("Export a copied channel")]
+    public async Task ExportChannel(CommandContext ctx, ulong guildId, ulong channelId)
+    {
+        var guild = await ctx.Client.GetGuildAsync(guildId);
+        var selectedChannel = guild.GetChannel(channelId);
+
+        await ctx.Channel.SendMessageAsync("Starting export...");
+
+        await ctx.Channel.SendMessageAsync("Collecting messages...");
+
+        var messag = await selectedChannel.GetMessagesAsync();
+
+        var messCopy = messag.ToList();
+        var more = await selectedChannel.GetMessagesAsync(100);
+
+        while (more.Count > 0)
+        {
+            messCopy.AddRange(more);
+            more = await selectedChannel.GetMessagesBeforeAsync(more.LastOrDefault().Id, 100);
+        }
+
+        await ctx.Channel.SendMessageAsync("Organizing messages...");
+
+        messCopy.Reverse();
+
+        var messageExports = new List<MessageExport>();
+
+        await ctx.Channel.SendMessageAsync(
+            $"Exporting {messCopy.Count} messages... (this could take awhile)"
+        );
+
+        foreach (var mes in messCopy)
+        {
+            if (!string.IsNullOrEmpty(mes.Content))
+            {
+                var textMessage = new MessageExport
+                {
+                    AuthorName = mes.Author.Username,
+                    IconUrl = mes.Author.AvatarUrl,
+                    MessageConent = mes.Content,
+                    Timestamp = mes.Timestamp.ToString("o")
+                };
+                messageExports.Add(textMessage);
+            }
+
+            if (mes.Attachments.Count > 0)
+            {
+                foreach (var att in mes.Attachments)
+                {
+                    var imageMessage = new MessageExport
+                    {
+                        AuthorName = mes.Author.Username,
+                        IconUrl = mes.Author.AvatarUrl,
+                        MessageConent = att.Url,
+                        Timestamp = mes.Timestamp.ToString("o")
+                    };
+                    messageExports.Add(imageMessage);
+                }
+            }
+        }
+
+        try
+        {
+            using var memStream = new MemoryStream();
+            using var writer = new StreamWriter(memStream);
+            using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+            csv.WriteRecords(messageExports);
+            await writer.FlushAsync();
+            memStream.Position = 0;
+            var fileMessage = new DiscordMessageBuilder() { Content = "Messages exported" };
+            fileMessage.AddFile($"{selectedChannel.Name}-export.csv", memStream, true);
+
+            await ctx.Channel.SendMessageAsync(fileMessage);
+        }
+        catch (Exception e)
+        {
+            await ctx.Channel.SendMessageAsync(e.Message);
+        }
     }
 }
