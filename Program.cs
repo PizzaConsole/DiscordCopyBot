@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
+using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,8 +21,6 @@ internal class Program
     private DiscordClient _discord;
     private CommandsNextExtension _commands;
     private InteractivityExtension _interactivity;
-
-    /* Use the async main to create an instance of the class and await it(async main is only available in C# 7.1 onwards). */
 
     private static async Task Main(string[] args) => await new Program().InitBot(args);
 
@@ -54,9 +53,9 @@ internal class Program
             _interactivity = _discord.UseInteractivity(
                 new InteractivityConfiguration()
                 {
-                    PaginationBehaviour = PaginationBehaviour.WrapAround, // What to do when a pagination request times out
-                    PaginationDeletion = PaginationDeletion.DeleteMessage, // How long to wait before timing out
-                    Timeout = TimeSpan.FromSeconds(30) // Default time to wait for interactive commands like waiting for a message or a reaction
+                    PaginationBehaviour = PaginationBehaviour.WrapAround,
+                    PaginationDeletion = PaginationDeletion.DeleteMessage,
+                    Timeout = TimeSpan.FromSeconds(30)
                 }
             );
 
@@ -68,21 +67,24 @@ internal class Program
                     StringPrefixes = new List<string>
                     {
                         _config.GetValue<string>("discord:CommandPrefix")
-                    }, // Load the command prefix(what comes before the command, eg "!" or "/") from our config file
+                    },
                     Services = services,
                     EnableDms = false
                 }
             );
+            var slash = _discord.UseSlashCommands();
+
+            slash.RegisterCommands<SlashCommands>();
 
             Console.WriteLine("[info] Loading command modules..");
 
-            var type = typeof(IModule); // Get the type of our interface
+            var type = typeof(IModule);
             var types = AppDomain.CurrentDomain
-                .GetAssemblies() // Get the assemblies associated with our project
-                .SelectMany(s => s.GetTypes()) // Get all the types
-                .Where(p => type.IsAssignableFrom(p) && !p.IsInterface); // Filter to find any type that can be assigned to an IModule
+                .GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => type.IsAssignableFrom(p) && !p.IsInterface);
 
-            var typeList = types as Type[] ?? types.ToArray(); // Convert to an array
+            var typeList = types as Type[] ?? types.ToArray();
             foreach (var t in typeList)
             {
                 _commands.RegisterCommands(t);
