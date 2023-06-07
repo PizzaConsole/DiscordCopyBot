@@ -20,6 +20,8 @@ namespace PoisnCopy;
         | Permissions.CreatePublicThreads
         | Permissions.ManageThreads
         | Permissions.SendMessagesInThreads
+        | Permissions.ManageEmojis
+        | Permissions.UseExternalEmojis
 )]
 public class SlashCommands : ApplicationCommandModule
 {
@@ -96,7 +98,7 @@ public class SlashCommands : ApplicationCommandModule
             var messag = await selectedChannel.GetMessagesAsync();
 
             var messCopy = messag.ToList();
-            var more = await selectedChannel.GetMessagesAsync(100);
+            var more = await selectedChannel.GetMessagesBeforeAsync(messCopy.LastOrDefault().Id);
 
             while (more.Count > 0)
             {
@@ -117,7 +119,8 @@ public class SlashCommands : ApplicationCommandModule
 
             var newChan = await ctx.Guild.CreateChannelAsync(
                 new_channel_name,
-                selectedChannel.Type
+                selectedChannel.Type,
+                nsfw: selectedChannel.IsNSFW
             );
 
             await ctx.EditResponseAsync(
@@ -125,9 +128,16 @@ public class SlashCommands : ApplicationCommandModule
                     $"Posting {messCopy.Count} messages... (this could take awhile)"
                 )
             );
-
+            using var httpClient = new HttpClient();
             foreach (var mes in messCopy)
             {
+                if (mes.Embeds.Count > 0)
+                {
+                    var embeds = new DiscordMessageBuilder().AddEmbeds(mes.Embeds);
+                    await newChan.SendMessageAsync(embeds);
+                    await Task.Delay(800);
+                }
+
                 if (!string.IsNullOrEmpty(mes.Content))
                 {
                     var whAu = new EmbedAuthor
@@ -141,30 +151,35 @@ public class SlashCommands : ApplicationCommandModule
                         Author = whAu,
                         Timestamp = mes.Timestamp
                     };
-
                     await newChan.SendMessageAsync(what);
                     await Task.Delay(800);
                 }
 
-                if (mes.Attachments.Count > 0)
+                foreach (var att in mes.Attachments)
                 {
-                    foreach (var att in mes.Attachments)
+                    var whAu = new EmbedAuthor
                     {
-                        var whAu = new EmbedAuthor
-                        {
-                            Name = mes.Author.Username,
-                            IconUrl = mes.Author.AvatarUrl
-                        };
-                        var what = new DiscordEmbedBuilder
-                        {
-                            ImageUrl = att.Url,
-                            Author = whAu,
-                            Timestamp = mes.Timestamp
-                        };
+                        Name = mes.Author.Username,
+                        IconUrl = mes.Author.AvatarUrl
+                    };
+                    var what = new DiscordEmbedBuilder
+                    {
+                        Description = att.FileName,
+                        Author = whAu,
+                        Timestamp = mes.Timestamp,
+                    };
 
-                        await newChan.SendMessageAsync(what);
-                        await Task.Delay(800);
-                    }
+                    await newChan.SendMessageAsync(what);
+                    await Task.Delay(800);
+                    var attachStream = await httpClient.GetStreamAsync(att.Url);
+
+                    // upload attachment to discord
+                    var attachDiscord = new DiscordMessageBuilder().AddFiles(
+                        new Dictionary<string, Stream> { { att.FileName, attachStream } }
+                    );
+
+                    await newChan.SendMessageAsync(attachDiscord);
+                    await Task.Delay(800);
                 }
             }
 
