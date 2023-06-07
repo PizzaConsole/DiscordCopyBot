@@ -1,6 +1,5 @@
 ﻿using CsvHelper;
 using DSharpPlus;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.Attributes;
@@ -11,13 +10,17 @@ namespace PoisnCopy;
 
 [SlashRequirePermissions(
     Permissions.SendMessages
-        & Permissions.AccessChannels
-        & Permissions.ManageChannels
-        & Permissions.ReadMessageHistory
-        & Permissions.EmbedLinks
-        & Permissions.AttachFiles
+        | Permissions.AccessChannels
+        | Permissions.ManageChannels
+        | Permissions.ReadMessageHistory
+        | Permissions.EmbedLinks
+        | Permissions.AttachFiles
+        | Permissions.ReadMessageHistory
+        | Permissions.CreatePrivateThreads
+        | Permissions.CreatePublicThreads
+        | Permissions.ManageThreads
+        | Permissions.SendMessagesInThreads
 )]
-[Hidden]
 public class SlashCommands : ApplicationCommandModule
 {
     [SlashCommand("copychannel", "Copy a channel")]

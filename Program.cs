@@ -1,15 +1,21 @@
 ﻿using DSharpPlus;
+using DSharpPlus.CommandsNext.Exceptions;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.SlashCommands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using DSharpPlus.SlashCommands.EventArgs;
+using Microsoft.Extensions.Logging;
 
 namespace PoisnCopy;
 
 internal class Program
 {
+    public readonly EventId BotEventId = new(42, "ControlCopy");
     private CancellationTokenSource _cts { get; set; }
 
     private IConfigurationRoot _config;
@@ -56,6 +62,7 @@ internal class Program
             var slash = _discord.UseSlashCommands(
                 new SlashCommandsConfiguration { Services = services }
             );
+            slash.SlashCommandErrored += Commands_CommandErrored;
 
             slash.RegisterCommands<SlashCommands>();
 
@@ -92,5 +99,31 @@ internal class Program
             .AddSingleton(_config)
             .AddSingleton(_discord);
         return deps.BuildServiceProvider();
+    }
+
+    private async Task Commands_CommandErrored(
+        SlashCommandsExtension sender,
+        SlashCommandErrorEventArgs e
+    )
+    {
+        e.Context.Client.Logger.LogError(
+            BotEventId,
+            $"{e.Context.User.Username} tried executing '{e.Context.CommandName ?? "<unknown command>"}' but it errored: {e.Exception.GetType()}: {e.Exception.Message ?? "<no message>"}",
+            DateTime.Now
+        );
+
+        if (e.Exception is SlashExecutionChecksFailedException ex)
+        {
+            var emoji = DiscordEmoji.FromName(e.Context.Client, ":no_entry:");
+
+            var embed = new DiscordEmbedBuilder
+            {
+                Title = "Access denied",
+                Description =
+                    $"{emoji} You do not have the permissions required to execute this command.",
+                Color = new DiscordColor(0xFF0000) // red
+            };
+            await e.Context.CreateResponseAsync(embed);
+        }
     }
 }
