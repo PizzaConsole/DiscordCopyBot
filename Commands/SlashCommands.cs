@@ -1,14 +1,23 @@
 ﻿using CsvHelper;
 using DSharpPlus;
+using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
 using System.Globalization;
-using System.Threading.Channels;
 using static DSharpPlus.Entities.DiscordEmbedBuilder;
 
 namespace PoisnCopy;
 
+[SlashRequirePermissions(
+    Permissions.SendMessages
+        & Permissions.AccessChannels
+        & Permissions.ManageChannels
+        & Permissions.ReadMessageHistory
+        & Permissions.EmbedLinks
+        & Permissions.AttachFiles
+)]
+[Hidden]
 public class SlashCommands : ApplicationCommandModule
 {
     [SlashCommand("copychannel", "Copy a channel")]

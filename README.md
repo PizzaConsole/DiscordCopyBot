@@ -27,17 +27,15 @@ The bot will list the channels in the server that you are typing in. You must en
 
 i.e.
 
--> `pc.copychannel`
+-> `/copychannel`
 
--> "Which Channel would you like to copy? (copy and paste the Id) Pleaes wait while I find all of your channels, I will give you a message when I have found them all."
+-> "Here is your list of channels:<br>
+123456752146761758-general<br>
+--Thats all of the channels!--<br>
+Copy command: /loadchannel server_id:123456737220528146 channel_id:###<br>
+Export command: /exportchannel server_id:123456737220528146 channel_id:###"
 
--> `123456752146761758`
-
--> "Copy command: "
-
--> `pc.loadchannel 123456737220528146 123456752146761758` **Paste this in the Server that you want to put copy the channel into**
-
--> "What do you want the new channel to be named?"
+-> `/loadchannel server_id: 123456737220528146 channel_id: 123456752146761758 new_channel_name: testing` **Paste this in the Server that you want to put copy the channel into**
 
 -> `Channel Name` **It will create a new channel in the server that you are in** ![image](https://user-images.githubusercontent.com/60050783/107396172-c4042780-6aba-11eb-8ec4-88cf4b750e6a.png)
 
@@ -52,6 +50,8 @@ i.e.
 -> Posting 218 messages... (this could take awhile)
 
 -> new-chan copy complete!" **It will tell you when it is done, copying hundreds/thousands of messages can take a LONG time, be patient**
+
+-> `/exportchannel server_id: 768249837220528146 channel_id: 768562880751730718` **This will compile all of your message into a CSV File**
 
 Contributions are welcome! Just create a PR and I will review it.
 
