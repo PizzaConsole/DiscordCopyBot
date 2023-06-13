@@ -80,7 +80,7 @@ internal class Program
     {
         // Connect to discord's service
         Console.WriteLine("Connecting..");
-        await _discord.ConnectAsync();
+        await _discord.ConnectAsync(new DiscordActivity { Name = "ko-fi.com/poisnfang", });
         Console.WriteLine("Connected!");
         var connections = _discord.Guilds.Count;
         Console.WriteLine($"I am running on {connections} servers");
