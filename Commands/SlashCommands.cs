@@ -89,29 +89,10 @@ public class SlashCommands : ApplicationCommandModule
                 return;
             }
 
-            var guild = await ctx.Client.GetGuildAsync(serv_id);
-            var selectedChannel = guild.GetChannel(chan_id);
-
-            await ctx.CreateResponseAsync("Collecting messages...");
-
-            await ctx.Channel.TriggerTypingAsync();
-            var messag = await selectedChannel.GetMessagesAsync();
-
-            var messCopy = messag.ToList();
-            var more = await selectedChannel.GetMessagesBeforeAsync(messCopy.LastOrDefault().Id);
-
-            while (more.Count > 0)
-            {
-                messCopy.AddRange(more);
-                await Task.Delay(800);
-                more = await selectedChannel.GetMessagesBeforeAsync(more.LastOrDefault().Id, 100);
-            }
-
-            await ctx.EditResponseAsync(
-                new DiscordWebhookBuilder().WithContent("Organizing messages...")
+            var (messCopy, selectedChannel) = await ctx.CollectAndOrganizeMessagesAsync(
+                serv_id,
+                chan_id
             );
-
-            messCopy.Reverse();
 
             await ctx.EditResponseAsync(
                 new DiscordWebhookBuilder().WithContent("Creating channel...")
@@ -221,29 +202,11 @@ public class SlashCommands : ApplicationCommandModule
                 return;
             }
 
-            var guild = await ctx.Client.GetGuildAsync(serv_id);
-            var selectedChannel = guild.GetChannel(chan_id);
-
-            await ctx.CreateResponseAsync("Collecting messages...");
-
-            await ctx.Channel.TriggerTypingAsync();
-            var messag = await selectedChannel.GetMessagesAsync();
-
-            var messCopy = messag.ToList();
-            var more = await selectedChannel.GetMessagesAsync(100);
-
-            while (more.Count > 0)
-            {
-                messCopy.AddRange(more);
-                await Task.Delay(800);
-                more = await selectedChannel.GetMessagesBeforeAsync(more.LastOrDefault().Id, 100);
-            }
-
-            await ctx.EditResponseAsync(
-                new DiscordWebhookBuilder().WithContent("Organizing messages...")
+            var (messCopy, selectedChannel) = await ctx.CollectAndOrganizeMessagesAsync(
+                serv_id,
+                chan_id
             );
 
-            messCopy.Reverse();
             var messageExports = new List<MessageExport>();
 
             await ctx.EditResponseAsync(
