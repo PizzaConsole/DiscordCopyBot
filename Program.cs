@@ -15,7 +15,7 @@ namespace PoisnCopy;
 
 internal class Program
 {
-    public readonly EventId BotEventId = new(42, "ControlCopy");
+    public readonly EventId BotEventId = new(42, "PoisnCopy");
     private CancellationTokenSource _cts { get; set; }
 
     private IConfigurationRoot _config;

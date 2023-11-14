@@ -2,7 +2,8 @@
 
 PoisnCopy is now on 100 servers which is the capacity based on [this post from Discord](https://support.discord.com/hc/en-us/articles/4410940809111). I hope to verify this bot at some point, but it might be take a while.
 
-Therefore, _**if you try to add the bot to your servers it won't work.**_ Contact me directly with questions: posinfang@poisnfang.com
+Therefore, I created PoisnCopy2. Odds are the server will be turned off if you try to use it. 
+Contact me with questions. Either create an issue here on GitHub or add me on Discord: @PoisnFang
 
 **_I can assist in setting this bot up for personal use. Please reach out if you need help!_**
 
@@ -13,17 +14,17 @@ Therefore, _**if you try to add the bot to your servers it won't work.**_ Contac
 Discord channel copy bot
 
 Add the bot to BOTH of your servers using this link. (NOTE: You must be the OWNER (Not just an admin) of BOTH servers)
-https://discordapp.com/api/oauth2/authorize?client_id=768322637574570015&scope=bot&permissions=8
+https://discord.com/oauth2/authorize?client_id=1114582921827864687&scope=bot&permissions=396211112976
 
 **DISCLAIMER: There is no guarantee that I will keep this bot running on the server at any given point, use at your own risk**
 
-Use: `pc.copychannel`
+Use: `/copychannel`
 The bot will list the channels in the server that you are typing in. You must enter the ID of the channel that you want to copy and then I will give you a command to copy and paste in the new server.
 
 **Make sure your bot can see which channel you are typing in (check left hand side)**
 ![image](https://user-images.githubusercontent.com/60050783/107395699-49d3a300-6aba-11eb-8b1c-d4e4b41cd6f3.png)
 
-\*Note: The `pc.copychannel` command is just to list the IDs, once you have them, you can just use the `pc.loadchannel`command.
+\*Note: The `/copychannel` command is just to list the IDs, once you have them, you can just use the `/loadchannel`command.
 
 i.e.
 
