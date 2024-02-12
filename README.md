@@ -2,10 +2,8 @@
 
 PoisnCopy is now on 100 servers which is the capacity based on [this post from Discord](https://support.discord.com/hc/en-us/articles/4410940809111). I hope to verify this bot at some point, but it might be take a while.
 
-Therefore, I created PoisnCopy2. Odds are the server will be turned off if you try to use it. 
-Contact me with questions. Either create an issue here on GitHub or add me on Discord: @PoisnFang
-
-**_I can assist in setting this bot up for personal use. Please reach out if you need help!_**
+Therefore, I created PoisnCopy2. Odds are the bot will be offline. If you need the bot turned on, then please feel free to donate and I can turn it on.
+If you cannot get the project to work then you can try creating an issue in GitHub.
 
 ### Show Some Support - _Sponsor this project on Github_
 
